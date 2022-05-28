@@ -7,22 +7,61 @@ function clearChildren(element) {
         element.removeChild(element.firstChild);
 }
 
-const STORAGE_KEY = 'todo-list-aboyd52501';
 
-/**
- * Loads the todo list from local storage.
- * @returns {Array} The items
- */
-function getStoredItems() {
-    return JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '[]');
-}
+class PersistentArray {
+        
+    constructor (key) {
+        this.key = key;
 
-/**
- * Writes the todo list to local storage.
- * @param {Array} items
- */
-function storeItems(items) {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+        this.array = this.getArray();
+
+        this.callbacks = [];
+    }
+
+    getArray() {
+        return JSON.parse(localStorage.getItem(this.key) || '[]');
+    }
+
+    /**
+     * @callback setArrayCallback
+     * @param {Array} array The updated array
+     * @returns {void}
+     * @description A callback that is called when the array is updated
+     */
+
+    /**
+     * @param {setArrayCallback} fn The function callback to add
+     * @returns {void}
+     * @description Adds a callback to be called when the array is updated
+     */
+    addCallback(fn) {
+        this.callbacks.push(fn);
+        this.setArray(this.array);
+    }
+
+    setArray(array) {
+        if (this.array !== array) this.array = array;
+        this.callbacks.forEach(fn => fn(array));
+        localStorage.setItem(this.key, JSON.stringify(array));
+    }
+    
+    get(index) {
+        return this.array[index];
+    }
+    
+    push(value) {
+        this.array.push(value);
+        this.setArray(this.array);
+    }
+
+    /**
+     * Delete elements in this PersistentArray according to a filter function
+     * @param {Function} fn The filter function
+     */
+    filterDelete(fn) {
+        this.array = this.array.filter(fn);
+        this.setArray(this.array);
+    }
 }
 
 class ToDoItem {
@@ -32,70 +71,53 @@ class ToDoItem {
     }
 }
 
-
-/**
- * Populates the to-do list with the items in the given array
- * @param {Array} items
- * @param {HTMLElement} ul
- */
-function repopulateList(items, ul) {
-    clearChildren(ul);
-    items.forEach(x => {
-        const div = document.createElement('div');
-        div.classList.add('todo-item');
-        
-        const text = document.createElement('p');
-        text.innerText = x.text;
-        div.appendChild(text);
-
-        const deleteButton = document.createElement('button');
-        deleteButton.addEventListener('click', () => {
-            removeToDo(items, ul, x);
-        });
-        deleteButton.innerText = 'Delete';
-        div.appendChild(deleteButton);
-        
-        const li = document.createElement('li');
-        li.appendChild(div);
-        
-        ul.appendChild(li);
-    });
+function todoItemButtonCallback(pArray, todoItem) {
+    return () => {
+        pArray.filterDelete(x => x.id !== todoItem.id);
+    }
 }
 
-function addToDo(list, ul, todo) {
-    list.push(todo);
-    update(list, ul);
-}
-
-function removeToDo(list, ul, todo) {
-    const index = list.findIndex(x => x.id === todo.id);
-    list.splice(index, 1);
-    update(list, ul);
-}
-
-function update(list, ul) {
-    storeItems(list);
-    repopulateList(list, ul);
-}
 
 // Initialize the todo list
-let items = getStoredItems();
+const STORAGE_KEY = 'todo-list-aboyd52501';
+let itemList = new PersistentArray(STORAGE_KEY);
 
 const UL = document.querySelector('.todo-list');
-repopulateList(items, UL);
-
 
 const input = document.querySelector('.todo-input');
 const inputButton = document.querySelector('.todo-input-add');
 
-console.log(items);
+console.log(itemList);
+
+// Callback to populate the list when the array is updated
+itemList.addCallback(array => {
+    clearChildren(UL);
+    array.forEach(todo => {
+        const li = document.createElement('li');
+        li.classList.add('todo-item');
+
+        const text = document.createElement('p');
+        text.textContent = todo.text;
+        li.appendChild(text);
+
+        const button = document.createElement('button');
+        button.innerText = 'Delete';
+        button.addEventListener('click', todoItemButtonCallback(itemList, todo));
+        li.appendChild(button);
+
+        UL.appendChild(li);
+    });
+});
 
 inputButton.addEventListener('click', () => {
     const text = input.value;
     if (!text) return;
-
+    
+    // Ensure each todo has a unique ID for easy deletion
     const todo = new ToDoItem(crypto.randomUUID(), text);
-
+    
     input.value = '';
-    addToDo(items, UL, todo);
+    
+    itemList.push(todo); 
 });
+    
