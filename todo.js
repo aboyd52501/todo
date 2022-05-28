@@ -109,7 +109,7 @@ itemList.addCallback(array => {
     });
 });
 
-inputButton.addEventListener('click', () => {
+function addItemFromInput() {
     const text = input.value;
     if (!text) return;
     
@@ -119,5 +119,12 @@ inputButton.addEventListener('click', () => {
     input.value = '';
     
     itemList.push(todo); 
+}
+
+inputButton.addEventListener('click', addItemFromInput);
+input.addEventListener('keyup', e => {
+    if(e.key === 'Enter') {
+        inputButton.click();
+        e.target.blur();
+    }
 });
-    
