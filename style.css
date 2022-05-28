@@ -1,4 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
+
+* {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+}
+
 .container {
+ 
     background-color: rgb(235, 235, 235);
     padding: 20px;
     border-radius: 20px;
@@ -8,8 +16,6 @@
     max-width: 960px;
     margin: 0 auto;
 
-    /* box-shadow: 10px 10px 32px rgba(0, 0, 0, 0.5); */
-
 }
 
 .row {
@@ -17,13 +23,65 @@
     margin-bottom: 48px;
 }
 
+.input-container {
+    display: flex;
+    box-shadow: 2px 2px rgba(0,0,0,0.2);
+}
+
+.input-container .todo-input {
+    flex-grow: 1;
+    border: none;
+    /* border-bottom: 1px solid #ccc; */
+    padding: 8px;
+    font-size: 16px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+}
+
+.input-container .todo-input:focus {
+    outline: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.input-container button {
+    background-color: hsl(120, 100%, 90%);
+    border: none;
+}
+
+.input-container button:hover {
+    background-color: hsl(120, 100%, 80%);
+    outline: 1px solid rgba(0, 0, 0, 1);
+}
+
 .todo-item {
     display: flex;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
+
+    /* border: 1px dotted lightgray; */
+    /* border-radius: 16px; */
+    padding-left: 30px;
+
+    background-color: hsl(200, 100%, 90%);
+    border-bottom: 1px solid #ccc;
+
+    box-shadow: 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+.todo-item button {
+    border: none;
+    background-color: hsl(0, 100%, 90%);
+}
+
+.todo-item button:hover {
+    background-color: hsl(0,100%, 80%);
+    outline: 1px solid rgba(0, 0, 0, 1);
 }
 
 .todo-item p {
     flex-grow: 1;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+button {
+    font-size: 16px;
 }
