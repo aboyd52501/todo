@@ -93,19 +93,19 @@ console.log(itemList);
 itemList.addCallback(array => {
     clearChildren(UL);
     array.forEach(todo => {
-        const li = document.createElement('li');
-        li.classList.add('todo-item');
+        const div = document.createElement('div');
+        div.classList.add('todo-item');
 
         const text = document.createElement('p');
         text.textContent = todo.text;
-        li.appendChild(text);
+        div.appendChild(text);
 
         const button = document.createElement('button');
         button.innerText = 'Delete';
         button.addEventListener('click', todoItemButtonCallback(itemList, todo));
-        li.appendChild(button);
+        div.appendChild(button);
 
-        UL.appendChild(li);
+        UL.appendChild(div);
     });
 });
 
