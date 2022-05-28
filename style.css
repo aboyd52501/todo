@@ -1,0 +1,29 @@
+.container {
+    background-color: rgb(235, 235, 235);
+    padding: 20px;
+    border-radius: 20px;
+
+    width: 100%;
+    box-sizing: border-box;
+    max-width: 960px;
+    margin: 0 auto;
+
+    /* box-shadow: 10px 10px 32px rgba(0, 0, 0, 0.5); */
+
+}
+
+.row {
+    margin: 16px;
+    margin-bottom: 48px;
+}
+
+.todo-item {
+    display: flex;
+    margin-bottom: 8px;
+}
+
+.todo-item p {
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
