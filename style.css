@@ -5,11 +5,15 @@
     font-weight: 600;
 }
 
+body {
+    background-color: rgb(235, 235, 235);
+}
+
 .container {
  
-    background-color: rgb(235, 235, 235);
+    /* background-color: rgb(235, 235, 235);
     padding: 20px;
-    border-radius: 20px;
+    border-radius: 20px; */
 
     width: 100%;
     box-sizing: border-box;
@@ -86,13 +90,13 @@ button {
     font-size: 16px;
 }
 
+.header-row {
+    position: relative;
+}
+
 .list-status {
     display: block;
     position: absolute;
     top: 0;
     right: 0;
-}
-
-.header-row {
-    position: relative;
 }
