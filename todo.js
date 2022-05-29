@@ -68,6 +68,8 @@ class ToDoItem {
     constructor(id, text) {
         this.id = id;
         this.text = text;
+
+        this.creationTime = new Date().toLocaleString(undefined, {dateStyle: 'long', timeStyle: "long"});
     }
 }
 
@@ -95,6 +97,8 @@ itemList.addCallback(array => {
     array.forEach(todo => {
         const div = document.createElement('div');
         div.classList.add('todo-item');
+        if (todo.creationTime)
+            div.setAttribute('title', todo.creationTime);
 
         const text = document.createElement('p');
         text.textContent = todo.text;
